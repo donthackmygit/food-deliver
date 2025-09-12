@@ -68,4 +68,31 @@ const removeFood = async (req, res) => {
     }
 };
 
-export { addFood, listFood, removeFood };
+const searchFood = async (req, res) => {
+    try {
+        // Lấy từ khóa tìm kiếm từ query parameter 'q'
+        const searchQuery = req.query.q;
+
+        if (!searchQuery) {
+            return res.json({ success: true, data: [] });
+        }
+
+        // Tạo một biểu thức chính quy (regex) để tìm kiếm không phân biệt chữ hoa/thường
+        const keyword = new RegExp(searchQuery, 'i');
+
+        // Tìm các món ăn có 'name' hoặc 'description' khớp với từ khóa
+        const foods = await foodModel.find({
+            $or: [
+                { name: { $regex: keyword } },
+                { description: { $regex: keyword } }
+            ]
+        });
+
+        res.json({ success: true, data: foods });
+
+    } catch (error) {
+        console.log("Error in searchFood:", error);
+        res.json({ success: false, message: "Error searching for food" });
+    }
+}
+export { addFood, listFood, removeFood, searchFood };

@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react"; // Sửa lỗi 1
+import { useState, useEffect } from "react";
 import './List.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import PropTypes from 'prop-types'; // Thêm để sửa lỗi 2
+import PropTypes from 'prop-types';
+import { useTranslation } from "react-i18next";
 
 const List = ({ url }) => {
+    const { t } = useTranslation();
     const [list, setList] = useState([]);
 
     const fetchList = async () => {
@@ -12,34 +14,34 @@ const List = ({ url }) => {
         if (response.data.success) {
             setList(response.data.data);
         } else {
-            toast.error("Error fetching list");
+            toast.error(t("errorFetchingList"));
         }
     };
 
     const removeFood = async (foodId) => {
         const response = await axios.post(`${url}/api/food/remove`, { id: foodId });
-        await fetchList(); // Lấy lại danh sách sau khi xóa
+        await fetchList();
         if (response.data.success) {
             toast.success(response.data.message);
         } else {
-            toast.error("Error removing food");
+            toast.error(t("errorRemovingFood"));
         }
     };
 
     useEffect(() => {
         fetchList();
-    }, );
+    }, []);
 
     return (
         <div className='list-add flex-col'>
-            <p>All Food List</p>
+            <p>{t("allFoodList")}</p>
             <div className="list-table">
                 <div className="list-table-format title">
-                    <b>Image</b>
-                    <b>Name</b>
-                    <b>Category</b>
-                    <b>Price</b>
-                    <b>Action</b>
+                    <b>{t("image")}</b>
+                    <b>{t("name")}</b>
+                    <b>{t("category")}</b>
+                    <b>{t("price")}</b>
+                    <b>{t("action")}</b>
                 </div>
                 {list.map((item) => (
                     <div key={item._id} className="list-table-format">
@@ -55,7 +57,6 @@ const List = ({ url }) => {
     );
 };
 
-// Thêm đoạn này để sửa lỗi 2
 List.propTypes = {
     url: PropTypes.string.isRequired
 };
