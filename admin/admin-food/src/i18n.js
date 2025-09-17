@@ -30,6 +30,17 @@ const resources = {
             "errorFetchingList": "Error fetching list",
             "errorRemovingFood": "Error removing food",
 
+            // Edit Modal (MỚI THÊM)
+            "editFoodItem": "Edit Food Item",
+            "currentImage": "Current Image",
+            "changeImage": "Change Image",
+            "update": "Update",
+            "cancel": "Cancel",
+            "errorUpdatingFood": "Error updating food",
+            "enterProductName": "Enter product name",
+            "enterProductDescription": "Enter product description",
+            "enterProductPrice": "Enter product price",
+
             // Orders Page
             "orderPage": "Order Page",
             "itemsLabel": "Items",
@@ -37,7 +48,8 @@ const resources = {
             "statusOutForDelivery": "Out for delivery",
             "statusDelivered": "Delivered",
             "error": "Error",
-            "adminPanel": "Admin Panel"
+            "adminPanel": "Admin Panel",
+            "edit": "Edit"
         }
     },
     ja: {
@@ -67,6 +79,17 @@ const resources = {
             "errorFetchingList": "リストの取得中にエラーが発生しました",
             "errorRemovingFood": "食品の削除中にエラーが発生しました",
 
+            // Edit Modal (MỚI THÊM)
+            "editFoodItem": "食品アイテムを編集",
+            "currentImage": "現在の画像",
+            "changeImage": "画像を変更",
+            "update": "更新",
+            "cancel": "キャンセル",
+            "errorUpdatingFood": "食品の更新中にエラーが発生しました",
+            "enterProductName": "商品名を入力してください",
+            "enterProductDescription": "商品説明を入力してください",
+            "enterProductPrice": "商品価格を入力してください",
+
             // Orders Page
             "orderPage": "注文ページ",
             "itemsLabel": "品目",
@@ -74,7 +97,8 @@ const resources = {
             "statusOutForDelivery": "配達中",
             "statusDelivered": "配達済み",
             "error": "エラー",
-            "adminPanel": "管理パネル"
+            "adminPanel": "管理パネル",
+            "edit": "編集"
         }
     }
 };

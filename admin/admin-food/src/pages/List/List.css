@@ -1,24 +1,164 @@
-.list-table-format{
-    display:grid;
-    grid-template-columns: 0.5fr 2fr 1fr 1fr 0.5fr;
+/* --- List.css --- */
+
+/* Container chính của trang List - ĐÂY LÀ PHẦN SỬA LỖI QUAN TRỌNG */
+.list-add {
+    width: 100%; /* Đảm bảo container chiếm hết không gian */
+    padding: 20px;
+    box-sizing: border-box;
+    
+    /* Sử dụng Flexbox để căn giữa nội dung */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Căn giữa tất cả các phần tử con theo chiều ngang */
+}
+
+/* Style cho tiêu đề "All Food List" */
+.list-add > p {
+    font-size: 1.8em;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Container cho toàn bộ bảng - TĂNG CHIỀU RỘNG */
+.list-table {
+    width: 95%; /* Cho bảng chiếm gần hết phần trắng */
+    max-width: 1200px; /* Đặt chiều rộng tối đa cho màn hình lớn */
+}
+
+/* Style chung cho cả hàng tiêu đề và hàng dữ liệu */
+.list-table-format {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 1.5fr 1fr 1fr;
     align-items: center;
-    gap:10px;
-    padding:12px 15px;
-    border: 1px solid #cacaca;
-    font-size: 13px;
+    gap: 15px;
+    padding: 15px 20px;
+    border: 1px solid #e0e0e0;
+    font-size: 14px;
+    color: #505050;
 }
-.list-table-format.title{
-    background-color: #f9f9f9;
+
+/* Style cho hàng tiêu đề */
+.list-table-format.title {
+    background-color: #f8f8f8;
+    font-weight: bold;
+    border-bottom: 2px solid tomato;
+    border-radius: 8px 8px 0 0;
 }
-.list-table-format img{
-    width:50px
+
+/* Style cho các hàng dữ liệu dạng "thẻ" */
+.list-table-format:not(.title) {
+    background-color: #fff;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
-@mdedoa (max-width:600px){
-    .list-table-format{
-        grid-template-columns:1fr 3fr 1fr;
-        gap:15px
+
+.list-table-format:not(.title):hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.list-table-format:last-child {
+    margin-bottom: 0;
+}
+
+/* Căn giữa chữ trong các ô */
+.list-table-format p {
+    text-align: center;
+    margin: 0;
+}
+
+/* Căn trái tên sản phẩm cho dễ đọc */
+.list-table-format:not(.title) p:nth-child(2) {
+    text-align: left;
+    font-weight: 500;
+}
+
+.list-table-format img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin: 0 auto; /* Tự động căn giữa ảnh */
+}
+
+/* Container cho các nút Edit và X */
+.list-action-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.edit-button, .remove-button {
+    cursor: pointer;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+}
+
+.edit-button:hover, .remove-button:hover {
+    transform: scale(1.1);
+}
+
+.edit-button {
+    color: #007bff;
+    text-decoration: underline;
+}
+
+.remove-button {
+    color: tomato;
+    font-size: 1.2em;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 1000px) {
+    .list-table {
+        width: 100%; /* Trên màn hình nhỏ, cho phép bảng chiếm toàn bộ chiều rộng */
     }
-    .list-table-format.title{
-        display:none
+
+    .list-table-format {
+        grid-template-columns: 0.5fr 2fr 1fr; /* Ẩn cột Category và Price */
+        padding: 12px 10px;
+        font-size: 12px;
+    }
+    
+    .list-table-format.title p:nth-child(3),
+    .list-table-format.title p:nth-child(4),
+    .list-table-format:not(.title) p:nth-child(3),
+    .list-table-format:not(.title) p:nth-child(4) {
+        display: none;
+    }
+
+    .list-table-format img {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media (max-width: 600px) {
+    .list-table-format.title {
+        display: none;
+    }
+
+    .list-table-format {
+        grid-template-columns: 1fr 2fr;
+        text-align: left;
+    }
+
+    .list-table-format p,
+    .list-table-format:not(.title) p:nth-child(2) {
+        text-align: left;
+    }
+
+    .list-table-format img {
+        grid-row: span 2;
+        align-self: center;
+    }
+
+    .list-action-buttons {
+        grid-column: 2;
+        justify-content: flex-start;
+        margin-top: 5px;
     }
 }

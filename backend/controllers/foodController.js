@@ -95,4 +95,46 @@ const searchFood = async (req, res) => {
         res.json({ success: false, message: "Error searching for food" });
     }
 }
-export { addFood, listFood, removeFood, searchFood };
+const updateFood = async (req, res) => {
+    try {
+        const foodId = req.params.id; // Lấy ID món ăn từ URL params
+        const { name, description, price, category } = req.body;
+
+        if (!name || !description || !price || !category) {
+            return res.status(400).json({ success: false, message: "Full information please!" });
+        }
+
+        if (isNaN(price) || price < 0) {
+            return res.status(400).json({ success: false, message: "Invalid price!" });
+        }
+
+        let updateData = {
+            name,
+            description,
+            price,
+            category
+        };
+        if (req.file) {
+            const oldFood = await foodModel.findById(foodId);
+            if (oldFood && fs.existsSync(`uploads/${oldFood.image}`)) {
+                fs.unlink(`uploads/${oldFood.image}`, (err) => {
+                    if (err) console.error("Error deleting old image:", err);
+                });
+            }
+            updateData.image = req.file.filename;
+        }
+
+        const updatedFood = await foodModel.findByIdAndUpdate(foodId, updateData, { new: true });
+
+        if (!updatedFood) {
+            return res.status(404).json({ success: false, message: "Food not found!" });
+        }
+
+        res.json({ success: true, message: "Food updated!", food: updatedFood });
+
+    } catch (error) {
+        console.error("Error in updateFood:", error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+export { addFood, listFood, removeFood, searchFood, updateFood};

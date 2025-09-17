@@ -1,0 +1,140 @@
+.edit-food-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Nền mờ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Đảm bảo modal nằm trên cùng */
+}
+
+.edit-food-modal {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh; /* Giới hạn chiều cao */
+    overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
+}
+
+.edit-food-modal form {
+    gap: 15px; /* Khoảng cách giữa các phần tử form */
+}
+
+.edit-food-modal h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.edit-food-modal .food-image-upload {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.edit-food-modal .food-image-upload img {
+    width: 120px;
+    height: 120px;
+    border-radius: 4px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+}
+
+.edit-food-modal .food-image-upload label span {
+    display: inline-block;
+    background-color: #f0f0f0;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: #555;
+    transition: background-color 0.3s ease;
+}
+
+.edit-food-modal .food-image-upload label span:hover {
+    background-color: #e0e0e0;
+}
+
+
+.edit-food-modal .form-group {
+    gap: 5px;
+}
+
+.edit-food-modal label {
+    font-weight: 500;
+    color: #444;
+}
+
+.edit-food-modal input[type="text"],
+.edit-food-modal input[type="number"],
+.edit-food-modal textarea,
+.edit-food-modal select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Quan trọng để padding không làm tăng chiều rộng */
+    font-size: 1em;
+}
+
+.edit-food-modal textarea {
+    resize: vertical; /* Chỉ cho phép thay đổi chiều cao */
+    min-height: 80px;
+}
+
+.edit-food-modal button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.edit-food-modal .add-btn {
+    background-color: #4CAF50; /* Màu xanh lá */
+    color: white;
+}
+
+.edit-food-modal .add-btn:hover {
+    background-color: #45a049;
+}
+
+.edit-food-modal .cancel-btn {
+    background-color: #f44336; /* Màu đỏ */
+    color: white;
+}
+
+.edit-food-modal .cancel-btn:hover {
+    background-color: #da190b;
+}
+
+.list-action-buttons {
+    display: flex;
+    gap: 10px; /* Khoảng cách giữa nút X và Edit */
+    align-items: center;
+    justify-content: center;
+}
+
+.list-action-buttons .edit-button {
+    color: #007bff; /* Màu xanh dương cho nút edit */
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.list-action-buttons .edit-button:hover {
+    color: #0056b3;
+}
+
+.list-action-buttons .remove-button {
+    color: #dc3545; 
+    cursor: pointer;
+    font-weight: bold;
+}
