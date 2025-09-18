@@ -1,11 +1,9 @@
-// frontend/src/components/SearchModal/SearchModal.jsx
-import React from 'react';
 import './SearchModal.css';
 import FoodItem from '../FoodItem/FoodItem';
-import { useTranslation } from 'react-i18next'; // <-- Import useTranslation
+import { useTranslation } from 'react-i18next'; 
 
 const SearchModal = ({ isOpen, onClose, searchResults }) => {
-    const { t } = useTranslation(); // <-- Khởi tạo useTranslation
+    const { t } = useTranslation();
 
     if (!isOpen) {
         return null;
@@ -15,7 +13,7 @@ const SearchModal = ({ isOpen, onClose, searchResults }) => {
         <div className="search-modal-overlay" onClick={onClose}>
             <div className="search-modal-content" onClick={(e) => e.stopPropagation()}>
                 <div className="search-modal-header">
-                    <h2>{t("Search Results")}</h2> {/* Dịch tiêu đề */}
+                    <h2>{t("SearchResults")}</h2> 
                     <button onClick={onClose} className="close-button">&times;</button>
                 </div>
                 <div className="search-results-list">

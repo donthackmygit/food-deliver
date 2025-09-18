@@ -1,35 +1,118 @@
-.place-order{
-    display:flex;
-    align-items: start;
+.place-order {
+    display: flex;
+    align-items: flex-start;
     justify-content: space-between;
-    gap:50px;
+    gap: 50px;
     margin-top: 100px;
+    margin-bottom: 100px; /* Thêm khoảng cách ở dưới */
 }
-.place-order-left{
-    width:100%;
-    max-width: max(30%,500px);
+
+.place-order-left {
+    width: 100%;
+    max-width: max(40%, 500px); /* Tăng nhẹ độ rộng để cân đối hơn */
 }
-.place-order-left .title{
+
+.place-order-left .title {
     font-size: 30px;
     font-weight: 600;
-    margin-bottom:50px;
+    margin-bottom: 40px;
 }
-.place-order-left input{
-    margin-bottom:15px ;
-    width:100%;
-    padding:10px;
-    border:1px solid #c5c5c5;
+
+.place-order-left input {
+    margin-bottom: 15px;
+    width: 100%;
+    padding: 12px; /* Tăng padding để dễ nhập liệu hơn */
+    border: 1px solid #c5c5c5;
     border-radius: 4px;
-    outline-color:tomato;
+    outline-color: tomato;
+    font-size: 16px; /* Đặt cỡ chữ để dễ đọc */
 }
-.place-order-left .multi-fields{
-    display:flex;
-    gap:10px;
+
+.place-order-left .multi-fields {
+    display: flex;
+    gap: 15px;
 }
-.place-order-right{
-    width:100%;
-    max-width: max(40%,500px);
+
+.place-order-right {
+    width: 100%;
+    max-width: max(45%, 500px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Khoảng cách giữa các khối trong cột phải */
 }
-.place-order .cart-total button{
-    margin-top:30px ;
+
+/* --- CSS MỚI ĐƯỢC THÊM VÀ TINH CHỈNH --- */
+
+/* Căn chỉnh lại khối cart-total và delivery-options */
+.place-order-right .cart-total,
+.place-order-right .delivery-options {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Style cho tiêu đề h2 nhất quán */
+.place-order-right h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #262626;
+}
+
+/* Style cho khối Tùy chọn giao hàng */
+.delivery-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+/* Style cho nút radio */
+.delivery-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: tomato; /* Thay đổi màu của radio button khi được chọn */
+    cursor: pointer;
+}
+
+/* Style cho nhãn của radio button */
+.delivery-option label {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Style cho khu vực chứa DatePicker */
+.date-picker-wrapper {
+    margin-left: 28px; /* Căn lề để thẳng hàng với text của label */
+    margin-top: 5px;
+}
+
+/* Ghi đè style mặc định của input trong DatePicker */
+.react-datepicker-wrapper input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #c5c5c5;
+    border-radius: 4px;
+    outline-color: tomato;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #f9f9f9; /* Thêm màu nền nhẹ để nổi bật */
+}
+
+/* Nút Submit chính */
+.place-order-submit {
+    margin-top: 20px; /* Giảm margin-top vì đã có gap */
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: tomato;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: 500;
+}
+
+.place-order-submit:hover {
+    background-color: #e04a36; /
 }

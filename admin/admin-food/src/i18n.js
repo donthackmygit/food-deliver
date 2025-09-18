@@ -49,7 +49,8 @@ const resources = {
             "statusDelivered": "Delivered",
             "error": "Error",
             "adminPanel": "Admin Panel",
-            "edit": "Edit"
+            "edit": "Edit",
+            "filterAll": "All" 
         }
     },
     ja: {
@@ -79,7 +80,7 @@ const resources = {
             "errorFetchingList": "リストの取得中にエラーが発生しました",
             "errorRemovingFood": "食品の削除中にエラーが発生しました",
 
-            // Edit Modal (MỚI THÊM)
+            // Edit Modal
             "editFoodItem": "食品アイテムを編集",
             "currentImage": "現在の画像",
             "changeImage": "画像を変更",
@@ -98,7 +99,8 @@ const resources = {
             "statusDelivered": "配達済み",
             "error": "エラー",
             "adminPanel": "管理パネル",
-            "edit": "編集"
+            "edit": "編集",
+            "filterAll": "すべて"
         }
     }
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'; 
 import './Add.css';
 import { assets } from "../../assets/assets";
 import axios from 'axios';
@@ -7,14 +7,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from "react-i18next";
 
 const Add = ({ url }) => {
-    const { t } = useTranslation();
-    const [image, setImage] = useState(false);
-    const [data, setData] = useState({
+    const { t } = useTranslation(); 
+    const [image, setImage] = useState(false); 
+    const [data, setData] = useState({        
         name: "",
         description: "",
         price: "",
         category: "Salad"
     });
+    // --- KẾT THÚC SỬA LỖI ---
 
     const onChangeHandler = (event) => {
         const name = event.target.name;
@@ -87,4 +88,5 @@ const Add = ({ url }) => {
         </div>
     )
 }
+
 export default Add

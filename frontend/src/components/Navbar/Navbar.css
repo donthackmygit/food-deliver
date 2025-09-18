@@ -70,6 +70,8 @@
     border:1px solid tomato;
     outline:2px solid white;
     list-style:none ;
+    width: 100px; 
+    white-space: nowrap
 }
 .nav-profile-dropdown li{
     display: flex;

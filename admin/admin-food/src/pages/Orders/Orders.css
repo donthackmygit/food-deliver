@@ -26,6 +26,20 @@
     padding:10px;
     outline: none;
 }
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+}
 @media (max-width:1000px) {
     .order-item{
         font-size: 12px;
