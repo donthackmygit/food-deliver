@@ -1,6 +1,7 @@
 import foodModel from '../models/foodModel.js';
 import fs from 'fs';
-
+import userModel from '../models/userModel.js';
+import mongoose from 'mongoose'
 // Add food item
 const addFood = async (req, res) => {
     try {
@@ -136,5 +137,47 @@ const updateFood = async (req, res) => {
         console.error("Error in updateFood:", error);
         res.status(500).json({ success: false, message: error.message });
     }
-};
-export { addFood, listFood, removeFood, searchFood, updateFood};
+}
+const listRecommendations = async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const user = await userModel.findById(userId);
+
+        let recommendedFoodIds = [];
+
+        if (user && user.mlRecommendations && user.mlRecommendations.length > 0) {
+            recommendedFoodIds = user.mlRecommendations.map(id => new mongoose.Types.ObjectId(id));
+        } else {
+            const fallbackRecs = await foodModel.aggregate([{ $sample: { size: 6 } }]);
+            return res.json({ success: true, data: fallbackRecs });
+        }
+
+        const recommendations = await foodModel.find({ _id: { $in: recommendedFoodIds } });
+
+        // --- BẮT ĐẦU SỬA LỖI ---
+        // Dùng Map để đảm bảo mỗi món ăn chỉ xuất hiện một lần, giữ lại thứ tự gợi ý
+        const uniqueRecommendationsMap = new Map();
+        recommendations.forEach(food => {
+            // Nếu món ăn chưa có trong Map, thêm nó vào
+            if (!uniqueRecommendationsMap.has(food._id.toString())) {
+                uniqueRecommendationsMap.set(food._id.toString(), food);
+            }
+        });
+
+        // Chuyển Map trở lại thành mảng
+        const uniqueRecommendations = Array.from(uniqueRecommendationsMap.values());
+        // --- KẾT THÚC SỬA LỖI ---
+
+        // (Tùy chọn) Sắp xếp lại kết quả theo đúng thứ tự mà mô hình đã gợi ý
+        const sortedRecommendations = recommendedFoodIds
+            .map(id => uniqueRecommendationsMap.get(id.toString())) // Lấy từ map đã lọc
+            .filter(Boolean); // Lọc ra các món null (nếu có món đã bị xóa)
+
+        res.json({ success: true, data: sortedRecommendations });
+
+    } catch (error) {
+        console.error("Error fetching recommendations:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+}
+export { addFood, listFood, removeFood, searchFood, updateFood, listRecommendations};

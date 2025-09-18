@@ -1,14 +1,21 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import Stripe from 'stripe';
-import foodModel from "../models/foodModel.js"; 
+import foodModel from "../models/foodModel.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
-const DELIVERY_CHARGE = 2; 
+const DELIVERY_CHARGE = 2;
+
 const placeOrder = async (req, res) => {
     try {
-        const userId = req.user.id; 
+        const userId = req.body.userId;
+        const userData = await userModel.findById(userId);
+        if (!userData) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        const userEmail = userData.email;
+
         let line_items = [];
         let totalAmount = 0;
 
@@ -17,43 +24,41 @@ const placeOrder = async (req, res) => {
             if (!foodData) {
                 return res.status(404).json({ success: false, message: `Food item with id ${item._id} not found` });
             }
-
             line_items.push({
                 price_data: {
                     currency: "usd",
-                    product_data: {
-                        name: foodData.name,
-                        images: [foodData.image]
-                    },
-                    unit_amount: Math.round(foodData.price * 100) 
+                    product_data: { name: foodData.name, images: [foodData.image] },
+                    unit_amount: Math.round(foodData.price * 100)
                 },
                 quantity: item.quantity
             });
             totalAmount += foodData.price * item.quantity;
         }
-        line_items.push({
-            price_data: {
-                currency: "usd",
-                product_data: { name: "Delivery Charges" },
-                unit_amount: Math.round(DELIVERY_CHARGE * 100)
-            },
-            quantity: 1
-        });
-        totalAmount += DELIVERY_CHARGE;
 
-        // Tạo đơn hàng mới trong database
+        if (totalAmount > 0) {
+            line_items.push({
+                price_data: {
+                    currency: "usd",
+                    product_data: { name: "Delivery Charges" },
+                    unit_amount: Math.round(DELIVERY_CHARGE * 100)
+                },
+                quantity: 1
+            });
+            totalAmount += DELIVERY_CHARGE;
+        }
+
+        // --- THAY ĐỔI: Thêm dữ liệu hẹn giờ vào đơn hàng mới ---
         const newOrder = new orderModel({
             userId: userId,
             items: req.body.items,
             amount: totalAmount,
-            address: req.body.address
+            address: req.body.address,
+            isScheduled: req.body.isScheduled,
+            scheduledDeliveryTime: req.body.isScheduled ? req.body.scheduledDeliveryTime : null
         });
         await newOrder.save();
-
-        // Xóa giỏ hàng của người dùng sau khi đã tạo đơn hàng
         await userModel.findByIdAndUpdate(userId, { cartData: {} });
 
-        // Tạo phiên thanh toán Stripe
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             line_items: line_items,
@@ -61,9 +66,10 @@ const placeOrder = async (req, res) => {
             success_url: `${FRONTEND_URL}/myorders?success=true`,
             cancel_url: `${FRONTEND_URL}/cart?canceled=true`,
             metadata: {
-                orderId: newOrder._id.toString()
+                orderId: newOrder._id.toString(),
+                isScheduled: req.body.isScheduled ? 'true' : 'false'
             },
-            customer_email: req.user.email 
+            customer_email: userEmail
         });
 
         res.json({ success: true, session_url: session.url });
@@ -74,17 +80,12 @@ const placeOrder = async (req, res) => {
     }
 }
 
-/**
- * @desc    Xử lý webhook từ Stripe sau khi thanh toán thành công
- * @route   POST /api/order/webhook
- * @access  Public (Stripe gọi đến)
- */
 const stripeWebhook = async (req, res) => {
     const sig = req.headers['stripe-signature'];
     let event;
 
     try {
-        event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
     } catch (err) {
         console.error(`Webhook signature verification failed.`, err.message);
         return res.status(400).send(`Webhook Error: ${err.message}`);
@@ -93,33 +94,30 @@ const stripeWebhook = async (req, res) => {
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object;
         const orderId = session.metadata.orderId;
+        const isScheduled = session.metadata.isScheduled === 'true';
+        const newStatus = isScheduled ? "Scheduled" : "Food Processing";
 
         if (orderId) {
             await orderModel.findByIdAndUpdate(orderId, {
                 payment: true,
-                status: "Food Processing"
+                status: newStatus
             });
-            console.log(`Order ${orderId} has been paid and is now processing.`);
+            console.log(`Order ${orderId} has been paid. Status set to: ${newStatus}`);
         }
     }
 
     res.status(200).json({ received: true });
 };
-
-/**
- * @desc    Lấy tất cả đơn hàng của người dùng đã đăng nhập
- * @route   GET /api/order/userorders
- * @access  Private (Cần middleware xác thực người dùng)
- */
 const userOrders = async (req, res) => {
     try {
-        const orders = await orderModel.find({ userId: req.user.id });
+        const orders = await orderModel.find({ userId: req.body.userId });
         res.json({ success: true, data: orders });
     } catch (error) {
         console.error("Error fetching user orders:", error);
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
+
 const listOrders = async (req, res) => {
     try {
         const orders = await orderModel.find({});
@@ -129,6 +127,7 @@ const listOrders = async (req, res) => {
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
+
 const updateStatus = async (req, res) => {
     try {
         await orderModel.findByIdAndUpdate(req.body.orderId, { status: req.body.status });

@@ -1,51 +1,70 @@
 import express from 'express';
 import cors from 'cors';
-import 'dotenv/config'; 
+import 'dotenv/config';
 import { connectDB } from './config/db.js';
 import foodRouter from './routes/foodRoute.js';
 import userRouter from './routes/userRoute.js';
-import cartRouter from './routes/cartRoute.js';
+import cartRouter from './routes/cartRoute.js'; 
 import orderRouter from './routes/orderRoute.js';
-
+import reviewRouter from './routes/reviewRoute.js'
+import { stripeWebhook } from './controllers/orderController.js';
+import cron from 'node-cron'
+import orderModel from './models/orderModel.js'
+import { updateAllUserRecommendations } from "./services/recommendationService.js"
 // --- APP CONFIG ---
 const app = express();
 const port = process.env.PORT || 4000;
-
-// --- MIDDLEWARE ---
-
-// TỐI ƯU: Xử lý route webhook của Stripe TRƯỚC khi phân tích JSON.
-// Stripe yêu cầu request body ở dạng raw để xác thực chữ ký.
-// Dòng này đảm bảo chỉ route webhook mới nhận được raw body.
-app.use('/api/order/webhook', express.raw({ type: 'application/json' }), orderRouter);
-
-// Middleware express.json() sẽ được áp dụng cho tất cả các route còn lại.
-app.use(express.json());
-
-// Cấu hình CORS của bạn đã tốt, sử dụng biến môi trường là một thực hành hay.
-const allowedOrigins = process.env.CLIENT_URLS ? process.env.CLIENT_URLS.split(',') : [];
-
-app.use(cors({
-    origin: function (origin, callback) {
-        // Cho phép các request không có origin (ví dụ: Postman, mobile apps)
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ["POST", "GET", "PUT", "DELETE"],
-    credentials: true
-}));
-
+console.log("Server.js is running..."); 
 // --- DATABASE CONNECTION ---
 connectDB();
+
+// --- MIDDLEWARE ---
+app.use(cors());
+app.use((req, res, next) => {
+    console.log(`[LOG] Nhận được request: ${req.method} ${req.originalUrl}`);
+    next();
+});
+app.post('/api/order/webhook', express.raw({ type: 'application/json' }), stripeWebhook);
+
+app.use(express.json());
+
+// --- API ENDPOINTS ---
 app.use("/api/food", foodRouter);
 app.use("/api/user", userRouter);
-app.use("/api/cart", cartRouter);
-app.use("/api/order", orderRouter); // Xử lý các route còn lại của order (place, list,...)
-app.use("/images", express.static('uploads')); 
+app.use("/api/cart", cartRouter); 
+app.use("/api/order", orderRouter);
+app.use("/images", express.static('uploads'));
+app.use("/api/review", reviewRouter)
+cron.schedule('*/5 * * * *', async () => {
+    console.log('Running cron job to check for scheduled orders...');
+    try {
+        const now = new Date();
+        // Lấy các đơn hàng có trạng thái "Scheduled" và thời gian giao hàng nằm trong 60 phút tới
+        const sixtyMinutesFromNow = new Date(now.getTime() + 60 * 60 * 1000);
 
-// Route health check
+        const ordersToProcess = await orderModel.find({
+            status: 'Scheduled',
+            scheduledDeliveryTime: { $lte: sixtyMinutesFromNow }
+        });
+
+        if (ordersToProcess.length > 0) {
+            console.log(`Found ${ordersToProcess.length} scheduled orders to process.`);
+            for (const order of ordersToProcess) {
+                order.status = 'Food Processing';
+                await order.save();
+            }
+        }
+    } catch (error) {
+        console.error('Error processing scheduled orders:', error);
+    }
+})
+cron.schedule('0 2 * * *', () => {
+    console.log('Running daily cron job to update ML recommendations...');
+    updateAllUserRecommendations();
+}, {
+    scheduled: true,
+    timezone: "Asia/Ho_Chi_Minh"
+});
 app.get("/", (req, res) => {
     res.send("API is working correctly.");
 });

@@ -1,44 +1,150 @@
-import userModel from '../models/userModel.js'
-//add items to user cart
-const addToCart = async (req,res)=>{
-    try{
-        let userData = await userModel.findById(req.body.userId)
-        let cartData = await userData.cartData
-        if(!cartData[req.body.itemId]){
-            cartData[req.body.itemId] = 1
+// console.log(">>> cartController.js: Bắt đầu thực thi file...")
+// import userModel from '../models/userModel.js'
+// //add items to user cart
+// const addToCart = async (req, res) => {
+//     try {
+//         let userData = await userModel.findById(req.body.userId);
+//         if (!userData) {
+//             return res.status(404).json({ success: false, message: "User not found" });
+//         }
+//         let cartData = userData.cartData || {};
+
+//         if (!cartData[req.body.itemId]) {
+//             cartData[req.body.itemId] = 1;
+//         } else {
+//             cartData[req.body.itemId] += 1;
+//         }
+
+//         await userModel.findByIdAndUpdate(req.body.userId, { cartData });
+//         res.json({ success: true, message: "Added To Cart" });
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({ success: false, message: "Error processing request" });
+//     }
+// }
+
+// //remove items from user cart
+// const removeFromCart = async (req, res) => {
+//     try {
+//         let userData = await userModel.findById(req.body.userId);
+
+//         // SỬA LỖI TẠI ĐÂY: Kiểm tra xem người dùng có tồn tại không
+//         if (!userData) {
+//             return res.status(404).json({ success: false, message: "User not found" });
+//         }
+        
+//         let cartData = userData.cartData || {};
+
+//         if (cartData[req.body.itemId] && cartData[req.body.itemId] > 0) {
+//             cartData[req.body.itemId] -= 1;
+//         }
+
+//         await userModel.findByIdAndUpdate(req.body.userId, { cartData });
+//         res.json({ success: true, message: "Removed From Cart" });
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({ success: false, message: "Error processing request" });
+//     }
+// }
+
+// //fetch user cart data
+// const getCart = async (req, res) => {
+//     try {
+//         let userData = await userModel.findById(req.body.userId);
+
+//         // SỬA LỖI TẠI ĐÂY: Kiểm tra xem người dùng có tồn tại không
+//         if (!userData) {
+//             return res.status(404).json({ success: false, message: "User not found" });
+//         }
+
+//         let cartData = userData.cartData || {};
+//         res.json({ success: true, cartData });
+//     } catch (error) {
+//         console.log(error); 
+//         res.status(500).json({ success: false, message: "Error fetching cart" });
+//     }
+// }
+
+// export { addToCart, removeFromCart, getCart }
+
+console.log(">>> cartController.js: Bắt đầu thực thi file...");
+
+import userModel from '../models/userModel.js';
+
+// =======================
+// Add items to user cart
+// =======================
+const addToCart = async (req, res) => {
+    try {
+        const userId = req.userId; // lấy từ authMiddleware
+        const { itemId } = req.body;
+
+        let userData = await userModel.findById(userId);
+        if (!userData) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        let cartData = userData.cartData || {};
+
+        if (!cartData[itemId]) {
+            cartData[itemId] = 1;
         } else {
-            cartData[req.body.itemId] += 1
+            cartData[itemId] += 1;
         }
-        await userModel.findByIdAndUpdate(req.body.userId,{cartData})
-        res.json({success:true,message:"Added To Cart"})
-    } catch(error){
-        console.log(error)
-        res.json({success:false,message:"Error"})
+
+        await userModel.findByIdAndUpdate(userId, { cartData });
+        res.json({ success: true, message: "Added To Cart" });
+    } catch (error) {
+        console.log("Error in addToCart:", error);
+        res.status(500).json({ success: false, message: "Error processing request" });
     }
-}
-//remove items from user cart
-const removeFromCart = async (req,res) => {
-    try{
-        let userData = await userModel.findById(req.body.userId)
-        let cartData = await userData.cartData
-        if(cartData[req.body.itemId]>0){
-            cartData[req.body.itemId] -= 1
+};
+
+// ==========================
+// Remove items from user cart
+// ==========================
+const removeFromCart = async (req, res) => {
+    try {
+        const userId = req.userId; // lấy từ authMiddleware
+        const { itemId } = req.body;
+
+        let userData = await userModel.findById(userId);
+        if (!userData) {
+            return res.status(404).json({ success: false, message: "User not found" });
         }
-        await userModel.findByIdAndUpdate(req.body.userId,{cartData})
-        res.json({success:true,message:"Removed From Cart"})
-    } catch(error){
-        console.log(error)
-        res.json({success:false,message:"Error"})
+
+        let cartData = userData.cartData || {};
+
+        if (cartData[itemId] && cartData[itemId] > 0) {
+            cartData[itemId] -= 1;
+        }
+
+        await userModel.findByIdAndUpdate(userId, { cartData });
+        res.json({ success: true, message: "Removed From Cart" });
+    } catch (error) {
+        console.log("Error in removeFromCart:", error);
+        res.status(500).json({ success: false, message: "Error processing request" });
     }
-}
-//fetch user cart data
-const getCart = async (req,res) => {
-    try{
-        let userData = await userModel.findById(req.body.userId)
-        let cartData = await userData.cartData
-        res.json({success:true,cartData})
-    } catch(error){
-        res.json({success:false,message:"Error"})
+};
+
+// ============================
+// Fetch user cart data
+// ============================
+const getCart = async (req, res) => {
+    try {
+        const userId = req.userId; // lấy từ authMiddleware
+
+        let userData = await userModel.findById(userId);
+        if (!userData) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        let cartData = userData.cartData || {};
+        res.json({ success: true, cartData });
+    } catch (error) {
+        console.log("Error in getCart:", error);
+        res.status(500).json({ success: false, message: "Error fetching cart" });
     }
-}
-export {addToCart,removeFromCart,getCart}
+};
+
+export { addToCart, removeFromCart, getCart };
