@@ -30,7 +30,7 @@ const resources = {
             "errorFetchingList": "Error fetching list",
             "errorRemovingFood": "Error removing food",
 
-            // Edit Modal (MỚI THÊM)
+            // Edit Modal
             "editFoodItem": "Edit Food Item",
             "currentImage": "Current Image",
             "changeImage": "Change Image",
@@ -47,10 +47,12 @@ const resources = {
             "statusProcessing": "Food Processing",
             "statusOutForDelivery": "Out for delivery",
             "statusDelivered": "Delivered",
+            "statusScheduled": "Scheduled", // MỚI
+            "scheduledForLabel": "Scheduled for:", // MỚI
             "error": "Error",
             "adminPanel": "Admin Panel",
             "edit": "Edit",
-            "filterAll": "All" 
+            "filterAll": "All"
         }
     },
     ja: {
@@ -97,6 +99,8 @@ const resources = {
             "statusProcessing": "調理中",
             "statusOutForDelivery": "配達中",
             "statusDelivered": "配達済み",
+            "statusScheduled": "予約済み", // MỚI
+            "scheduledForLabel": "配達予定日時:", // MỚI
             "error": "エラー",
             "adminPanel": "管理パネル",
             "edit": "編集",

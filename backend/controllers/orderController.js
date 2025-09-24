@@ -9,7 +9,7 @@ const DELIVERY_CHARGE = 2;
 
 const placeOrder = async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = req.userId;
         const userData = await userModel.findById(userId);
         if (!userData) {
             return res.status(404).json({ success: false, message: "User not found" });
@@ -46,8 +46,6 @@ const placeOrder = async (req, res) => {
             });
             totalAmount += DELIVERY_CHARGE;
         }
-
-        // --- THAY ĐỔI: Thêm dữ liệu hẹn giờ vào đơn hàng mới ---
         const newOrder = new orderModel({
             userId: userId,
             items: req.body.items,
@@ -110,7 +108,7 @@ const stripeWebhook = async (req, res) => {
 };
 const userOrders = async (req, res) => {
     try {
-        const orders = await orderModel.find({ userId: req.body.userId });
+        const orders = await orderModel.find({ userId: req.userId });
         res.json({ success: true, data: orders });
     } catch (error) {
         console.error("Error fetching user orders:", error);

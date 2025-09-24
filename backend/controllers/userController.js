@@ -75,16 +75,12 @@ const registerUser = async (req, res) => {
 }
 const getUserProfile = async (req, res) => {
     try {
-        // LƯU Ý: Sau khi bạn cập nhật authMiddleware, bạn nên đổi dòng này thành:
-        // const userId = req.userId;
-        const userId = req.body.userId; // userId được lấy từ authMiddleware
+        const userId = req.userId; 
         const user = await userModel.findById(userId);
 
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
-
-        // Chỉ trả về những thông tin cần thiết, không trả về mật khẩu
         const userData = {
             name: user.name,
             email: user.email
