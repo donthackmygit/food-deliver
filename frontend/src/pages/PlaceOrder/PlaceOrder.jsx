@@ -90,8 +90,6 @@ const PlaceOrder = () => {
                     <input name='firstName' required onChange={onChangeHandler} value={data.firstName} type="text" placeholder={t('First Name')} />
                     <input name='lastName' required onChange={onChangeHandler} value={data.lastName} type="text" placeholder={t('Last Name')} />
                 </div>
-
-                {/* --- THAY ĐỔI: Thêm thuộc tính 'disabled' vào ô email --- */}
                 <input name='email' required type="email" value={data.email} placeholder={t('Email address')} disabled />
                 
                 <input name='street' required onChange={onChangeHandler} value={data.street} type="text" placeholder={t('Street')} />

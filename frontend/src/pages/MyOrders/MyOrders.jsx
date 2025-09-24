@@ -43,7 +43,7 @@ const MyOrders = () => {
     return (
         <div className='my-orders'>
             <h2>{t("My Orders")}</h2>
-            {!selectedOrder ? ( // Hiển thị danh sách đơn hàng nếu không có đơn hàng nào được chọn
+            {!selectedOrder ? (
                 <div className="container">
                     {orders.length > 0 ? (
                         orders.map((order, index) => (
@@ -60,8 +60,7 @@ const MyOrders = () => {
                                 </p>
                                 <p>${order.amount}.00</p>
                                 <p>{t("Items")}: {order.items.length}</p>
-                                <p><span>&#x25cf;</span> <b>{order.status}</b></p>
-                                {/* Chỉ hiển thị nút "Track Order" cho các đơn hàng đang hoạt động */}
+                                <p><span>&#x25cf;</span> <b>{t(order.status)}</b></p>
                                 {order.status === "Food Processing" || order.status === "Out for Delivery" ? (
                                     <button>{t("trackOrder")}</button>
                                 ) : (
@@ -73,7 +72,7 @@ const MyOrders = () => {
                         <p className="no-orders">{t("No orders found.")}</p>
                     )}
                 </div>
-            ) : ( // Hiển thị chi tiết đơn hàng nếu có đơn hàng được chọn
+            ) : ( 
                 <div className="order-details">
                     <button onClick={handleBackToList} className="back-button">{t("Back to Orders")}</button>
                     <h3>{t("Order Details")} # {selectedOrder._id}</h3>
