@@ -95,13 +95,12 @@ const resources = {
             "Deliver Now": "Deliver Now",
             "Schedule for Later": "Schedule for Later",
             "recommendationsForYou": "Recommendations for you",
-
-            // --- THÊM MỚI: Order Statuses ---
             "Pending Payment": "Pending Payment",
             "Food Processing": "Food Processing",
             "Out for Delivery": "Out for Delivery",
             "Delivered": "Delivered",
-            "Scheduled": "Scheduled"
+            "Scheduled": "Scheduled",
+            "SearchResults": "Search Results"
         }
     },
     ja: {
@@ -196,13 +195,12 @@ const resources = {
             "Deliver Now": "すぐに配達",
             "Schedule for Later": "後で配達を予約",
             "recommendationsForYou": "あなたへのおすすめ",
-
-            // --- THÊM MỚI: Order Statuses ---
             "Pending Payment": "支払い待ち",
             "Food Processing": "準備中",
             "Out for Delivery": "配達中",
             "Delivered": "配達済み",
-            "Scheduled": "予約済み"
+            "Scheduled": "予約済み",
+            "SearchResults":"検索結果"
         }
     }
 };
