@@ -7,6 +7,7 @@ import Verify from './pages/Verify/Verify.jsx';
 import MyOrders from './pages/MyOrders/MyOrders.jsx';
 import StoreContextProvider from './context/StoreContext.jsx';
 import Layout from './Layout.jsx'; 
+import AuthHandler from './pages/AuthHandler.jsx';
 
 const App = () => {
     return (
@@ -18,6 +19,7 @@ const App = () => {
                     <Route path='/order' element={<PlaceOrder />} />
                     <Route path="/verify" element={<Verify />} />
                     <Route path='/myorders' element={<MyOrders />} />
+                    <Route path='/auth/callback' element={<AuthHandler />} />
                 </Routes>
             </Layout>
         </StoreContextProvider>

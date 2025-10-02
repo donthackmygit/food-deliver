@@ -1,0 +1,49 @@
+service: cart-api-service
+provider:
+  name: aws
+  runtime: nodejs18.x # Sử dụng Node.js runtime phiên bản 18
+  region: ap-southeast-1 
+  stage: dev
+  environment:
+    MONGODB_URI: ${env:DATABASE_URL}
+    JWT_SECRET: ${env:JWT_SECRET}
+  
+  # Quyền hạn (IAM Role) cho hàm Lambda.
+  # Mặc định, Lambda không có quyền làm gì cả.
+  iam:
+    role:
+      statements:
+        # Cấp quyền cho Lambda để ghi logs vào Amazon CloudWatch
+        - Effect: "Allow"
+          Action:
+            - "logs:CreateLogGroup"
+            - "logs:CreateLogStream"
+            - "logs:PutLogEvents"
+          Resource: "arn:aws:logs:*:*:*"
+
+# Định nghĩa các hàm Lambda 
+functions:
+  # Tên logic của hàm trong Serverless Framework
+  cartApiHandler:
+    # Đường dẫn đến file và hàm xử lý được export: ten_file.ten_ham_export
+    handler: serverless-handlers/lambda_cart_handler.handler
+    
+    # Các sự kiện (triggers) sẽ kích hoạt hàm Lambda này
+    events:
+      # Kích hoạt khi có request GET đến /dev/cart
+      - http:
+          path: cart
+          method: get
+          cors: true # Bật CORS để ReactJS có thể gọi API này
+          
+      # Kích hoạt khi có request POST đến /dev/cart/add
+      - http:
+          path: cart/add
+          method: post
+          cors: true
+          
+      # Kích hoạt khi có request POST đến /dev/cart/remove
+      - http:
+          path: cart/remove
+          method: post
+          cors: true

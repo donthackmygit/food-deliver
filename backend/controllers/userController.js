@@ -93,4 +93,44 @@ const getUserProfile = async (req, res) => {
         res.status(500).json({ success: false, message: "Server Error" });
     }
 }
-export { loginUser, registerUser, getUserProfile };
+const verifyFirebaseToken = async (idToken) => {
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        return decodedToken; 
+    } catch (error) {
+        console.error("Lỗi xác thực Firebase Token:", error);
+        return null;
+    }
+}
+const firebaseLogin = async (req, res) => {
+    const { name, email, idToken } = req.body;
+
+    // 1. BẢO MẬT: Xác thực Token
+    const decodedToken = await verifyFirebaseToken(idToken);
+
+    if (!decodedToken || decodedToken.email !== email) {
+        return res.json({ success: false, message: "Token is invalid or expired." });
+    }
+
+    try {
+        // 2. TÌM NGƯỜI DÙNG theo email (đã được Firebase xác thực)
+        let user = await userModel.findOne({ email });
+
+        if (!user) {
+            // 3. NẾU KHÔNG TỒN TẠI: TẠO NGƯỜI DÙNG MỚI (không cần password)
+            const newUser = new userModel({
+                name: name,
+                email: email,
+            });
+            user = await newUser.save();
+        } 
+        // 4. TẠO TOKEN HỆ THỐNG
+        const token = createToken(user._id, user.name); 
+        res.json({ success: true, token });
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error processing Firebase login" });
+    }
+}
+export { loginUser, registerUser, getUserProfile, verifyFirebaseToken, firebaseLogin };

@@ -54,6 +54,33 @@
 .navbar-profile{
     position: relative;
 }
+
+/* ======================================================= */
+/* === PHẦN BỔ SUNG QUAN TRỌNG: PROFILE INFO VÀ TÊN === */
+/* ======================================================= */
+
+.navbar-profile-info {
+    /* Đảm bảo tên và icon profile hiển thị cùng một hàng */
+    display: flex; 
+    align-items: center;
+    gap: 8px; /* Khoảng cách giữa tên và icon */
+    cursor: pointer;
+}
+
+.navbar-profile-info span {
+    font-size: 16px; 
+    color: #49557e;
+    font-weight: 500;
+    max-width: 100px; /* Giới hạn độ dài tên */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ======================================================= */
+/* === CSS CHO DROPDOWN (Đã tối ưu width) === */
+/* ======================================================= */
+
 .nav-profile-dropdown{
     position: absolute;
     display: none;
@@ -70,7 +97,8 @@
     border:1px solid tomato;
     outline:2px solid white;
     list-style:none ;
-    width: 100px; 
+    min-width: 150px; /* Đảm bảo đủ rộng để chứa text "Orders" và "Logout" */
+    width: auto; 
     white-space: nowrap
 }
 .nav-profile-dropdown li{
@@ -85,13 +113,16 @@
 .nav-profile-dropdown li:hover{
     color:tomato
 }
-/* Thêm vào cuối file Navbar.css */
+
+/* ======================================================= */
+/* === CSS CHO THANH TÌM KIẾM (Search Bar) === */
+/* ======================================================= */
 
 .navbar-right .search-container {
     display: flex;
     align-items: center;
     gap: 10px;
-    position: relative; /* Quan trọng cho việc định vị */
+    position: relative; 
 }
 
 .search-icon-trigger {
@@ -105,7 +136,7 @@
     border-radius: 50px;
     padding: 4px 8px;
     position: absolute;
-    right: 30px; /* Vị trí bắt đầu bên phải icon */
+    right: 30px; 
     transform-origin: right;
     transform: scaleX(0);
     opacity: 0;
@@ -137,10 +168,13 @@
     border-radius: 50px;
     cursor: pointer;
 }
-/* Thêm vào cuối file frontend/src/components/Navbar/Navbar.css */
+
+/* ======================================================= */
+/* === CSS CHO CHỌN NGÔN NGỮ (Language Selector) === */
+/* ======================================================= */
 
 .navbar-right .language-selector {
-    margin-right: 15px; /* Điều chỉnh khoảng cách */
+    margin-right: 15px; 
 }
 
 .navbar-right .language-selector select {
@@ -152,7 +186,7 @@
     font-size: 14px;
     color: #49557e;
     outline: none;
-    appearance: none; /* Bỏ giao diện mặc định của select box */
+    appearance: none; 
     -webkit-appearance: none;
     -moz-appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
@@ -165,6 +199,11 @@
 .navbar-right .language-selector select:focus {
     border-color: tomato;
 }
+
+/* ======================================================= */
+/* === MEDIA QUERIES (Responsive) === */
+/* ======================================================= */
+
 @media (max-width:1050px){
     .navbar .logo{
         width:140px
@@ -181,6 +220,9 @@
     }
     .navbar-right button{
         padding:8px 25px
+    }
+    .navbar-profile-info span {
+        font-size: 15px; 
     }
 }
 @media (max-width:900px){
@@ -200,6 +242,9 @@
     .navbar-right button{
         padding:7px 20px;
         font-size: 15px;
+    }
+    .navbar-profile-info span {
+        font-size: 14px; 
     }
 }
 @media (max-width:900px){  

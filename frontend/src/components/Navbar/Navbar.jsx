@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 const Navbar = ({ setShowLogin, onSearch }) => {
     const { t, i18n } = useTranslation();
     const [menu, setMenu] = useState("menu");
-    const { getTotalCartAmount, token, setToken } = useContext(StoreContext);
+    const { getTotalCartAmount, token, setToken, userName } = useContext(StoreContext);
     const navigate = useNavigate();
 
     const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -74,7 +74,10 @@ const Navbar = ({ setShowLogin, onSearch }) => {
                 </div>
                 {!token ? <button onClick={() => setShowLogin(true)}>{t("Sign In")}</button>
                     : <div className="navbar-profile">
-                        <img src={assets.profile_icon} alt="" />
+                        <div className='navbar-profile-info'>
+                            <span>{userName || 'Profile'}</span>
+                            <img src={assets.profile_icon} alt="" />
+                        </div>
                         <ul className="nav-profile-dropdown">
                             <li onClick={() => navigate('/myorders')}><img src={assets.bag_icon} alt="" /><p>{t("Orders")}</p></li>
                             <hr />

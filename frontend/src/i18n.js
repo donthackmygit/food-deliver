@@ -48,6 +48,7 @@ const resources = {
             "clickHere": "Click here",
             "alreadyHaveAccountPrompt": "Already have an account? ",
             "loginHere": "Login here",
+            "continueWithGoogle": "Continue with Google", // CẬP NHẬT: Thêm key dịch cho nút Google
 
             // Cart
             "Items": "Items",
@@ -148,6 +149,7 @@ const resources = {
             "clickHere": "ここをクリック",
             "alreadyHaveAccountPrompt": "すでにアカウントをお持ちですか？ ",
             "loginHere": "ここでログイン",
+            "continueWithGoogle": "Googleで続行", // CẬP NHẬT: Thêm key dịch cho nút Google
 
             // Cart
             "Items": "商品",
